@@ -42,7 +42,7 @@ docker compose down --volumes
 docker compose up
 ```
 
-## Project Documentation
+## Project Command Documentation
 
 This section contains supplementary documentation for the course steps.
 
