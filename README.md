@@ -52,7 +52,7 @@ This section contains supplementary documentation for the course steps.
 
 This course uses [aws-vault](https://github.com/99designs/aws-vault) to authenticate with the AWS CLI in the terminal.
 
-To authenticate:
+To authenticate with aws:
 
 ```
 aws-vault exec PROFILE --duration=8h
