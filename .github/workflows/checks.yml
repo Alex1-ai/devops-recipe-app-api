@@ -8,5 +8,5 @@ jobs:
   test-lint:
     uses: ./.github/workflows/test-and-lint.yml
     secrets:
-      DOCKERHUB_USER: ${{ vars.DOCKERHUB_USER }}        # DockerHub username from "Variables"
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}   # DockerHub token from "Secrets"
+      DOCKERHUB_USER: ${{ vars.DOCKERHUB_USER }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
