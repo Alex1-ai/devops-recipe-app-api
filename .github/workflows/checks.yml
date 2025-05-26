@@ -6,7 +6,7 @@ on:
 jobs:
   test-lint:
     name: Test and Lint
-    uses: Alex1-ai/devops-recipe-app-api/.github/workflows/test-and-lint.yml
+    uses: ./.github/workflows/test-and-lint.yml
     secrets:
       DOCKERHUB_USER: ${{ vars.DOCKERHUB_USER }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
