@@ -12,7 +12,7 @@ jobs:
     uses: ./.github/workflows/test-and-lint.yml
     secrets:
       DOCKERHUB_USER: ${{ vars.DOCKERHUB_USER }}
-      DOCKERHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
   deploy:
     name: Deploy
     runs-on: ubuntu-22.04
