@@ -44,7 +44,7 @@ docker compose up
 
 ## Project Command Documentation
 
-This section contains supplementary documentation for the course steps.
+This section contains supplementary command documentation for the project.
 
 ### AWS CLI
 
