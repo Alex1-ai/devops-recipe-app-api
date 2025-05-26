@@ -15,5 +15,8 @@ jobs:
     name: Python
     runs-on: ubuntu-22.04
     steps:
-      - name: Login to Docker Hub
-        run: echo "LOgining to docker ${{ secrets.DOCKERHUB_USER }} \n ${{ secrets.DOCKERHUB_TOKEN }}"
+      - name: Print DockerHub Credentials (for debugging — values will be masked)
+        run: |
+          echo "Logging in to DockerHub with:"
+          echo "Username: ${{ secrets.DOCKERHUB_USER }}"
+          echo "Token: ${{ secrets.DOCKERHUB_TOKEN }}"
