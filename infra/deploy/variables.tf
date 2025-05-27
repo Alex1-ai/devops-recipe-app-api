@@ -1,6 +1,6 @@
 variable "prefix" {
   description = "Prefix for resources in AWS"
-  default     = "raa"
+  default     = "raa" #recipe app api
 }
 
 variable "project" {
