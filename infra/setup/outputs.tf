@@ -1,5 +1,5 @@
 output "cd_user_access_key_id" {
-  description = "AWS key ID for CD user"
+  description = "Access key ID for CD user"
   value       = aws_iam_access_key.cd.id
 }
 
