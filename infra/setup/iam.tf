@@ -150,6 +150,7 @@ data "aws_iam_policy_document" "rds" {
       "rds:DeleteDBInstance",
       "rds:ListTagsForResource",
       "rds:ModifyDBInstance",
+      "rds:AddTagsToResource",
       "iam:CreateServiceLinkedRole",
       "iam:PassRole"
     ]
