@@ -12,8 +12,6 @@ resource "aws_db_subnet_group" "main" {
   tags = {
     Name = "${local.prefix}-db-subnet-group"
   }
-
-  depends_on = [time_sleep.wait_for_role]
 }
 
 resource "aws_security_group" "rds" {

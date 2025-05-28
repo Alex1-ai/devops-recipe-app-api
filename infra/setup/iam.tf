@@ -166,15 +166,3 @@ resource "aws_iam_user_policy_attachment" "rds" {
   user       = aws_iam_user.cd.name
   policy_arn = aws_iam_policy.rds.arn
 }
-
-# Create the RDS Service-Linked Role
-resource "aws_iam_service_linked_role" "rds" {
-  aws_service_name = "rds.amazonaws.com"
-  description      = "Service-linked role for RDS to manage AWS resources on your behalf"
-}
-
-# Add a small delay to ensure the role is fully propagated
-resource "time_sleep" "wait_for_role" {
-  depends_on      = [aws_iam_service_linked_role.rds]
-  create_duration = "10s"
-}
