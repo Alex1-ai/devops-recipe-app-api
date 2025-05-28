@@ -4,7 +4,13 @@ terraform {
       source  = "hashicorp/aws"
       version = "5.23.0"
     }
+    time = {
+      source  = "hashicorp/time"
+      version = "~> 0.9"  # or latest
+    }
+
   }
+
 
   backend "s3" {
     bucket               = "devop-recipe-app-tf-state"
