@@ -154,7 +154,7 @@ Each variable and their state is listed below:
 
 ## Section Notes and Resources
 
-### Software Requirements
+### Software / Project Requirements
 
 #### Checking Each Dependency
 
