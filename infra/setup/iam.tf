@@ -154,13 +154,6 @@ data "aws_iam_policy_document" "rds" {
     ]
     resources = ["*"]
   }
-  statement {
-    effect  = "Allow"
-    actions = ["iam:CreateServiceLinkedRole"]
-
-    resources = ["arn:aws:iam::*:role/aws-service-role/rds.amazonaws.com/AWSServiceRoleForRDS"]
-  }
-
 }
 
 resource "aws_iam_policy" "rds" {
@@ -173,5 +166,3 @@ resource "aws_iam_user_policy_attachment" "rds" {
   user       = aws_iam_user.cd.name
   policy_arn = aws_iam_policy.rds.arn
 }
-
-
