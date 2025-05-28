@@ -3,12 +3,10 @@ variable "tf_state_bucket" {
   default     = "devop-recipe-app-tf-state"
 }
 
-
 variable "tf_state_lock_table" {
-  description = "Name of the DynamoDB table for TF state locking"
+  description = "Name of DynamoDB table for TF state locking"
   default     = "devop-recipe-app-api-tf-lock"
 }
-
 
 variable "project" {
   description = "Project name for tagging resources"

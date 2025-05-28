@@ -1,6 +1,6 @@
-###############################
-# ECS Cluster for running app #
-###############################
+##
+# ECS Cluster for running app on Fargate.
+##
 
 resource "aws_iam_policy" "task_execution_role_policy" {
   name        = "${local.prefix}-task-exec-role-policy"
@@ -19,7 +19,6 @@ resource "aws_iam_role_policy_attachment" "task_execution_role" {
   policy_arn = aws_iam_policy.task_execution_role_policy.arn
 }
 
-
 resource "aws_iam_role" "app_task" {
   name               = "${local.prefix}-app-task"
   assume_role_policy = file("./templates/ecs/task-assume-role-policy.json")
@@ -37,16 +36,13 @@ resource "aws_iam_role_policy_attachment" "task_ssm_policy" {
   policy_arn = aws_iam_policy.task_ssm_policy.arn
 }
 
-
 resource "aws_cloudwatch_log_group" "ecs_task_logs" {
   name = "${local.prefix}-api"
 }
 
 resource "aws_ecs_cluster" "main" {
-    name = "${local.prefix}-cluster"
-
+  name = "${local.prefix}-cluster"
 }
-
 
 resource "aws_ecs_task_definition" "api" {
   family                   = "${local.prefix}-api"
@@ -59,7 +55,7 @@ resource "aws_ecs_task_definition" "api" {
 
   container_definitions = jsonencode(
     [
-            {
+      {
         name              = "api"
         image             = var.ecr_app_image
         essential         = true
@@ -154,8 +150,6 @@ resource "aws_ecs_task_definition" "api" {
   }
 }
 
-
-
 resource "aws_security_group" "ecs_service" {
   description = "Access rules for the ECS service."
   name        = "${local.prefix}-ecs-service"
@@ -188,7 +182,6 @@ resource "aws_security_group" "ecs_service" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-
 
 resource "aws_ecs_service" "api" {
   name                   = "${local.prefix}-api"
