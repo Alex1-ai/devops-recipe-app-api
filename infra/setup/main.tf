@@ -4,10 +4,6 @@ terraform {
       source  = "hashicorp/aws"
       version = "5.23.0"
     }
-    time = { # Add the time provider
-      source  = "hashicorp/time"
-      version = "0.13.1"
-    }
   }
 
   backend "s3" {

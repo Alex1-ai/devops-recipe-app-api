@@ -166,23 +166,3 @@ resource "aws_iam_user_policy_attachment" "rds" {
   user       = aws_iam_user.cd.name
   policy_arn = aws_iam_policy.rds.arn
 }
-
-
-# iam.tf in setup directory
-
-# Existing resources...
-resource "aws_iam_service_linked_role" "rds" {
-  aws_service_name = "rds.amazonaws.com"
-  description      = "Service-linked role for RDS to manage AWS resources on your behalf"
-}
-
-resource "time_sleep" "wait_for_role" {
-  depends_on      = [aws_iam_service_linked_role.rds]
-  create_duration = "10s"
-}
-
-# Add an output to indicate the role and wait are complete
-output "rds_service_linked_role_wait" {
-  value       = time_sleep.wait_for_role.id
-  description = "The ID of the time_sleep resource, used to ensure the RDS service-linked role is ready"
-}

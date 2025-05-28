@@ -1,19 +1,6 @@
 ############
 # Database #
 ############
-# deploy/database.tf
-
-# Fetch the state from the setup configuration
-data "terraform_remote_state" "setup" {
-  backend = "s3"
-  config = {
-    bucket         = "devop-recipe-app-tf-state"
-    key            = "tf-state-setup"
-    region         = "us-east-1"
-    encrypt        = true
-    dynamodb_table = "devop-recipe-app-api-tf-lock"
-  }
-}
 
 resource "aws_db_subnet_group" "main" {
   name = "${local.prefix}-main"
@@ -25,9 +12,6 @@ resource "aws_db_subnet_group" "main" {
   tags = {
     Name = "${local.prefix}-db-subnet-group"
   }
-
-# Depend on the output from the setup configuration
-  depends_on = [data.terraform_remote_state.setup]
 }
 
 resource "aws_security_group" "rds" {
