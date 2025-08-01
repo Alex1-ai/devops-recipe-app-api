@@ -166,11 +166,7 @@ data "aws_iam_policy_document" "rds" {
       "rds:DeleteDBInstance",
       "rds:ListTagsForResource",
       "rds:ModifyDBInstance",
-      "rds:AddTagsToResource",
-      "rds:DescribeDBEngineVersions",
-      "rds:DescribeDBParameters",
-      "rds:DescribeDBSecurityGroups",
-      "rds:DescribeOptionGroups"
+      "rds:AddTagsToResource"
     ]
     resources = ["*"]
   }
