@@ -2,6 +2,11 @@
 # Database #
 ############
 
+resource "aws_iam_service_linked_role" "rds" {
+  aws_service_name = "rds.amazonaws.com"
+  description      = "Service-linked role for Amazon RDS"
+}
+
 resource "aws_db_subnet_group" "main" {
   name = "${local.prefix}-main"
   subnet_ids = [
@@ -12,6 +17,8 @@ resource "aws_db_subnet_group" "main" {
   tags = {
     Name = "${local.prefix}-db-subnet-group"
   }
+
+  depends_on = [aws_iam_service_linked_role.rds]
 }
 
 resource "aws_security_group" "rds" {
@@ -40,7 +47,7 @@ resource "aws_db_instance" "main" {
   allocated_storage          = 20
   storage_type               = "gp2"
   engine                     = "postgres"
-  engine_version             = "15.3"
+  engine_version             = "17.2"
   auto_minor_version_upgrade = true
   instance_class             = "db.t4g.micro"
   username                   = var.db_username
