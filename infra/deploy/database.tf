@@ -2,6 +2,11 @@
 # Database #
 ############
 
+resource "aws_iam_service_linked_role" "rds" {
+  aws_service_name = "rds.amazonaws.com"
+  description      = "Service-linked role for Amazon RDS"
+}
+
 resource "aws_db_subnet_group" "main" {
   name = "${local.prefix}-main"
   subnet_ids = [
@@ -13,7 +18,7 @@ resource "aws_db_subnet_group" "main" {
     Name = "${local.prefix}-db-subnet-group"
   }
 
-  # depends_on = [aws_iam_service_linked_role.rds]
+  depends_on = [aws_iam_service_linked_role.rds]
 }
 
 resource "aws_security_group" "rds" {
