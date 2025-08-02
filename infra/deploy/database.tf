@@ -13,7 +13,7 @@ resource "aws_db_subnet_group" "main" {
     Name = "${local.prefix}-db-subnet-group"
   }
 
-  depends_on = [aws_iam_service_linked_role.rds]
+  # depends_on = [aws_iam_service_linked_role.rds]
 }
 
 resource "aws_security_group" "rds" {
