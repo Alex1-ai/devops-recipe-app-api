@@ -1,4 +1,4 @@
-# DevOps Deployment Automation with Terraform, AWS and Docker - Starter Code
+# DevOps Deployment Automation with Terraform, AWS and Docker
 
 Deploying my Recipe App Api (built with Test Driven Development) to Amazon Web services
 ## Local Development
@@ -195,3 +195,12 @@ git config --global user.email email@example.com
 git config --global user.name "User Name"
 git config --global push.autoSetupRemote true
 ```
+
+# Creat super user on the app
+```sh
+aws-vault exec your-iam-user --duration=8h
+
+aws ecs execute-command --region
+your-region --cluster your-cluster-name --task your-container-id --container your-container-name --interactive --command "/bin/sh"
+```
+

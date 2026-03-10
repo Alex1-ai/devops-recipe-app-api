@@ -236,8 +236,11 @@ resource "aws_iam_user_policy_attachment" "ecs" {
 
 data "aws_iam_policy_document" "service_linked_ecs" {
   statement {
-    effect    = "Allow"
-    actions   = ["iam:CreateServiceLinkedRole"]
+    effect = "Allow"
+    actions = [
+      "iam:CreateServiceLinkedRole",
+      "iam:DeleteServiceLinkedRole"
+    ]
     resources = ["*"]
 
     condition {
@@ -351,4 +354,46 @@ resource "aws_iam_policy" "service_linked_rds" {
 resource "aws_iam_user_policy_attachment" "service_linked_rds" {
   user       = aws_iam_user.cd.name
   policy_arn = aws_iam_policy.service_linked_rds.arn
+}
+
+
+#########################
+# Policy for ELB access #
+#########################
+
+data "aws_iam_policy_document" "elb" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "elasticloadbalancing:DeleteLoadBalancer",
+      "elasticloadbalancing:DeleteTargetGroup",
+      "elasticloadbalancing:DeleteListener",
+      "elasticloadbalancing:DescribeListeners",
+      "elasticloadbalancing:DescribeLoadBalancerAttributes",
+      "elasticloadbalancing:DescribeTargetGroups",
+      "elasticloadbalancing:DescribeTargetGroupAttributes",
+      "elasticloadbalancing:DescribeLoadBalancers",
+      "elasticloadbalancing:CreateListener",
+      "elasticloadbalancing:SetSecurityGroups",
+      "elasticloadbalancing:ModifyLoadBalancerAttributes",
+      "elasticloadbalancing:CreateLoadBalancer",
+      "elasticloadbalancing:ModifyTargetGroupAttributes",
+      "elasticloadbalancing:CreateTargetGroup",
+      "elasticloadbalancing:AddTags",
+      "elasticloadbalancing:DescribeTags",
+      "elasticloadbalancing:ModifyListener"
+    ]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "elb" {
+  name        = "${aws_iam_user.cd.name}-elb"
+  description = "Allow user to manage ELB resources."
+  policy      = data.aws_iam_policy_document.elb.json
+}
+
+resource "aws_iam_user_policy_attachment" "elb" {
+  user       = aws_iam_user.cd.name
+  policy_arn = aws_iam_policy.elb.arn
 }
