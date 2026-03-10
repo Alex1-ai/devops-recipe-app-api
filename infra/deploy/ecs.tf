@@ -1,6 +1,16 @@
+
+
+
+resource "aws_iam_service_linked_role" "ecs" {
+  aws_service_name = "ecs.amazonaws.com"
+}
+
+
+
 ##
 # ECS Cluster for running app on Fargate.
 ##
+
 
 resource "aws_iam_policy" "task_execution_role_policy" {
   name        = "${local.prefix}-task-exec-role-policy"
@@ -186,11 +196,17 @@ resource "aws_security_group" "ecs_service" {
 resource "aws_ecs_service" "api" {
   name                   = "${local.prefix}-api"
   cluster                = aws_ecs_cluster.main.name
-  task_definition        = aws_ecs_task_definition.api.family
+  # task_definition        = aws_ecs_task_definition.api.family
+  task_definition        = aws_ecs_task_definition.api.arn
   desired_count          = 1
   launch_type            = "FARGATE"
   platform_version       = "1.4.0"
   enable_execute_command = true
+
+
+  depends_on = [
+    aws_iam_service_linked_role.ecs
+  ]
 
   network_configuration {
     assign_public_ip = true
