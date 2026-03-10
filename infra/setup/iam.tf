@@ -234,6 +234,31 @@ resource "aws_iam_user_policy_attachment" "ecs" {
   policy_arn = aws_iam_policy.ecs.arn
 }
 
+data "aws_iam_policy_document" "service_linked_ecs" {
+  statement {
+    effect    = "Allow"
+    actions   = ["iam:CreateServiceLinkedRole"]
+    resources = ["*"]
+
+    condition {
+      test     = "StringLike"
+      variable = "iam:AWSServiceName"
+      values   = ["ecs.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_policy" "service_linked_ecs" {
+  name        = "${aws_iam_user.cd.name}-service_linked_ecs"
+  description = "Allow ECS to create service linked role."
+  policy      = data.aws_iam_policy_document.service_linked_ecs.json
+}
+
+resource "aws_iam_user_policy_attachment" "service_linked_ecs" {
+  user       = aws_iam_user.cd.name
+  policy_arn = aws_iam_policy.service_linked_ecs.arn
+}
+
 #########################
 # Policy for IAM access #
 #########################
