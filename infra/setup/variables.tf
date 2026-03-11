@@ -15,5 +15,21 @@ variable "project" {
 
 variable "contact" {
   description = "Contact name for tagging resources"
-  default     = "@example.com"
+  default     = "alexanderemmanuel1719@gmail.com"
+}
+
+variable "dns_zone_name" {
+  description = "Domain name"
+  default     = "alexis.net"
+}
+
+variable "subdomain" {
+  description = "Subdomain for each environment"
+  type        = map(string)
+
+  default = {
+    prod    = "api"
+    staging = "api.staging"
+    dev     = "api.dev"
+  }
 }
