@@ -1,6 +1,16 @@
+
+
+
+resource "aws_iam_service_linked_role" "ecs" {
+  aws_service_name = "ecs.amazonaws.com"
+}
+
+
+
 ##
 # ECS Cluster for running app on Fargate.
 ##
+
 
 resource "aws_iam_policy" "task_execution_role_policy" {
   name        = "${local.prefix}-task-exec-role-policy"
@@ -176,30 +186,45 @@ resource "aws_security_group" "ecs_service" {
 
   # HTTP inbound access
   ingress {
-    from_port   = 8000
-    to_port     = 8000
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port = 8000
+    to_port   = 8000
+    protocol  = "tcp"
+    # cidr_blocks = ["0.0.0.0/0"]
+    security_groups = [
+      aws_security_group.lb.id
+    ]
   }
 }
 
 resource "aws_ecs_service" "api" {
-  name                   = "${local.prefix}-api"
-  cluster                = aws_ecs_cluster.main.name
-  task_definition        = aws_ecs_task_definition.api.family
+  name    = "${local.prefix}-api"
+  cluster = aws_ecs_cluster.main.name
+  # task_definition        = aws_ecs_task_definition.api.family
+  task_definition        = aws_ecs_task_definition.api.arn
   desired_count          = 1
   launch_type            = "FARGATE"
   platform_version       = "1.4.0"
   enable_execute_command = true
 
+
+  depends_on = [
+    aws_iam_service_linked_role.ecs
+  ]
+
   network_configuration {
-    assign_public_ip = true
+    # assign_public_ip = true
 
     subnets = [
-      aws_subnet.public_a.id,
-      aws_subnet.public_b.id
+      aws_subnet.private_a.id,
+      aws_subnet.private_b.id
     ]
 
     security_groups = [aws_security_group.ecs_service.id]
+  }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.api.arn
+    container_name   = "proxy"
+    container_port   = 8000
   }
 }
