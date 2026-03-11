@@ -234,33 +234,33 @@ resource "aws_iam_user_policy_attachment" "ecs" {
   policy_arn = aws_iam_policy.ecs.arn
 }
 
-data "aws_iam_policy_document" "service_linked_ecs" {
-  statement {
-    effect = "Allow"
-    actions = [
-      "iam:CreateServiceLinkedRole",
-      "iam:DeleteServiceLinkedRole"
-    ]
-    resources = ["*"]
+# data "aws_iam_policy_document" "service_linked_ecs" {
+#   statement {
+#     effect = "Allow"
+#     actions = [
+#       "iam:CreateServiceLinkedRole",
+#       "iam:DeleteServiceLinkedRole"
+#     ]
+#     resources = ["*"]
 
-    condition {
-      test     = "StringLike"
-      variable = "iam:AWSServiceName"
-      values   = ["ecs.amazonaws.com"]
-    }
-  }
-}
+#     condition {
+#       test     = "StringLike"
+#       variable = "iam:AWSServiceName"
+#       values   = ["ecs.amazonaws.com"]
+#     }
+#   }
+# }
 
-resource "aws_iam_policy" "service_linked_ecs" {
-  name        = "${aws_iam_user.cd.name}-service_linked_ecs"
-  description = "Allow ECS to create service linked role."
-  policy      = data.aws_iam_policy_document.service_linked_ecs.json
-}
+# resource "aws_iam_policy" "service_linked_ecs" {
+#   name        = "${aws_iam_user.cd.name}-service_linked_ecs"
+#   description = "Allow ECS to create service linked role."
+#   policy      = data.aws_iam_policy_document.service_linked_ecs.json
+# }
 
-resource "aws_iam_user_policy_attachment" "service_linked_ecs" {
-  user       = aws_iam_user.cd.name
-  policy_arn = aws_iam_policy.service_linked_ecs.arn
-}
+# resource "aws_iam_user_policy_attachment" "service_linked_ecs" {
+#   user       = aws_iam_user.cd.name
+#   policy_arn = aws_iam_policy.service_linked_ecs.arn
+# }
 
 #########################
 # Policy for IAM access #
@@ -332,30 +332,66 @@ resource "aws_iam_user_policy_attachment" "logs" {
 }
 
 
-data "aws_iam_policy_document" "service_linked_rds" {
+# data "aws_iam_policy_document" "service_linked_rds" {
+#   statement {
+#     effect    = "Allow"
+#     actions   = ["iam:CreateServiceLinkedRole"]
+#     resources = ["*"]
+#     condition {
+#       test     = "StringLike"
+#       variable = "iam:AWSServiceName"
+#       values   = ["rds.amazonaws.com"]
+#     }
+#   }
+# }
+
+# resource "aws_iam_policy" "service_linked_rds" {
+#   name        = "${aws_iam_user.cd.name}-service_linked_rds"
+#   description = "Allow Amazon RDS to call AWS services on behalf of your DB instances."
+#   policy      = data.aws_iam_policy_document.service_linked_rds.json
+# }
+
+# resource "aws_iam_user_policy_attachment" "service_linked_rds" {
+#   user       = aws_iam_user.cd.name
+#   policy_arn = aws_iam_policy.service_linked_rds.arn
+# }
+
+#########################
+# JOINT Policy for ECS and RDS access #
+#########################
+
+data "aws_iam_policy_document" "service_linked" {
   statement {
-    effect    = "Allow"
-    actions   = ["iam:CreateServiceLinkedRole"]
+    effect = "Allow"
+
+    actions = [
+      "iam:CreateServiceLinkedRole",
+      "iam:DeleteServiceLinkedRole"
+    ]
+
     resources = ["*"]
+
     condition {
       test     = "StringLike"
       variable = "iam:AWSServiceName"
-      values   = ["rds.amazonaws.com"]
+      values = [
+        "ecs.amazonaws.com",
+        "rds.amazonaws.com"
+      ]
     }
   }
 }
 
-resource "aws_iam_policy" "service_linked_rds" {
-  name        = "${aws_iam_user.cd.name}-service_linked_rds"
-  description = "Allow Amazon RDS to call AWS services on behalf of your DB instances."
-  policy      = data.aws_iam_policy_document.service_linked_rds.json
+resource "aws_iam_policy" "service_linked" {
+  name        = "${aws_iam_user.cd.name}-service_linked"
+  description = "Allow AWS services to create service linked roles."
+  policy      = data.aws_iam_policy_document.service_linked.json
 }
 
-resource "aws_iam_user_policy_attachment" "service_linked_rds" {
+resource "aws_iam_user_policy_attachment" "service_linked" {
   user       = aws_iam_user.cd.name
-  policy_arn = aws_iam_policy.service_linked_rds.arn
+  policy_arn = aws_iam_policy.service_linked.arn
 }
-
 
 #########################
 # Policy for ELB access #
@@ -396,4 +432,40 @@ resource "aws_iam_policy" "elb" {
 resource "aws_iam_user_policy_attachment" "elb" {
   user       = aws_iam_user.cd.name
   policy_arn = aws_iam_policy.elb.arn
+}
+
+#########################
+# Policy for EFS access #
+#########################
+
+data "aws_iam_policy_document" "efs" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "elasticfilesystem:DescribeFileSystems",
+      "elasticfilesystem:DescribeAccessPoints",
+      "elasticfilesystem:DeleteFileSystem",
+      "elasticfilesystem:DeleteAccessPoint",
+      "elasticfilesystem:DescribeMountTargets",
+      "elasticfilesystem:DeleteMountTarget",
+      "elasticfilesystem:DescribeMountTargetSecurityGroups",
+      "elasticfilesystem:DescribeLifecycleConfiguration",
+      "elasticfilesystem:CreateMountTarget",
+      "elasticfilesystem:CreateAccessPoint",
+      "elasticfilesystem:CreateFileSystem",
+      "elasticfilesystem:TagResource",
+    ]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "efs" {
+  name        = "${aws_iam_user.cd.name}-efs"
+  description = "Allow user to manage EFS resources."
+  policy      = data.aws_iam_policy_document.efs.json
+}
+
+resource "aws_iam_user_policy_attachment" "efs" {
+  user       = aws_iam_user.cd.name
+  policy_arn = aws_iam_policy.efs.arn
 }
