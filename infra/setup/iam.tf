@@ -102,6 +102,11 @@ data "aws_iam_policy_document" "ec2" {
       "ec2:CreateTags",
       "ec2:CreateVpc",
       "ec2:DeleteVpc",
+
+      "ec2:CreateNetworkInterface",
+      "ec2:DeleteNetworkInterface",
+      "ec2:DescribeNetworkInterfaceAttribute",
+      "ec2:ModifyNetworkInterfaceAttribute",
       "ec2:DescribeSecurityGroups",
       "ec2:DeleteSubnet",
       "ec2:DeleteSecurityGroup",
@@ -444,6 +449,7 @@ data "aws_iam_policy_document" "efs" {
     actions = [
       "elasticfilesystem:DescribeFileSystems",
       "elasticfilesystem:DescribeAccessPoints",
+      "elasticfilesystem:DescribeFileSystemPolicy",
       "elasticfilesystem:DeleteFileSystem",
       "elasticfilesystem:DeleteAccessPoint",
       "elasticfilesystem:DescribeMountTargets",
@@ -455,6 +461,20 @@ data "aws_iam_policy_document" "efs" {
       "elasticfilesystem:CreateFileSystem",
       "elasticfilesystem:TagResource",
     ]
+    # actions = [
+    #   "elasticfilesystem:DescribeFileSystems",
+    #   "elasticfilesystem:DescribeAccessPoints",
+    #   "elasticfilesystem:DeleteFileSystem",
+    #   "elasticfilesystem:DeleteAccessPoint",
+    #   "elasticfilesystem:DescribeMountTargets",
+    #   "elasticfilesystem:DeleteMountTarget",
+    #   "elasticfilesystem:DescribeMountTargetSecurityGroups",
+    #   "elasticfilesystem:DescribeLifecycleConfiguration",
+    #   "elasticfilesystem:CreateMountTarget",
+    #   "elasticfilesystem:CreateAccessPoint",
+    #   "elasticfilesystem:CreateFileSystem",
+    #   "elasticfilesystem:TagResource",
+    # ]
     resources = ["*"]
   }
 }
