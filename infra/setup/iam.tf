@@ -207,37 +207,37 @@ resource "aws_iam_user_policy_attachment" "rds" {
 # Policy for ECS access #
 #########################
 
-data "aws_iam_policy_document" "ecs" {
-  statement {
-    effect = "Allow"
-    actions = [
-      "ecs:DescribeClusters",
-      "ecs:DeregisterTaskDefinition",
-      "ecs:DeleteCluster",
-      "ecs:DescribeServices",
-      "ecs:UpdateService",
-      "ecs:DeleteService",
-      "ecs:DescribeTaskDefinition",
-      "ecs:CreateService",
-      "ecs:RegisterTaskDefinition",
-      "ecs:CreateCluster",
-      "ecs:UpdateCluster",
-      "ecs:TagResource",
-    ]
-    resources = ["*"]
-  }
-}
+# data "aws_iam_policy_document" "ecs" {
+#   statement {
+#     effect = "Allow"
+#     actions = [
+#       "ecs:DescribeClusters",
+#       "ecs:DeregisterTaskDefinition",
+#       "ecs:DeleteCluster",
+#       "ecs:DescribeServices",
+#       "ecs:UpdateService",
+#       "ecs:DeleteService",
+#       "ecs:DescribeTaskDefinition",
+#       "ecs:CreateService",
+#       "ecs:RegisterTaskDefinition",
+#       "ecs:CreateCluster",
+#       "ecs:UpdateCluster",
+#       "ecs:TagResource",
+#     ]
+#     resources = ["*"]
+#   }
+# }
 
-resource "aws_iam_policy" "ecs" {
-  name        = "${aws_iam_user.cd.name}-ecs"
-  description = "Allow user to manage ECS resources."
-  policy      = data.aws_iam_policy_document.ecs.json
-}
+# resource "aws_iam_policy" "ecs" {
+#   name        = "${aws_iam_user.cd.name}-ecs"
+#   description = "Allow user to manage ECS resources."
+#   policy      = data.aws_iam_policy_document.ecs.json
+# }
 
-resource "aws_iam_user_policy_attachment" "ecs" {
-  user       = aws_iam_user.cd.name
-  policy_arn = aws_iam_policy.ecs.arn
-}
+# resource "aws_iam_user_policy_attachment" "ecs" {
+#   user       = aws_iam_user.cd.name
+#   policy_arn = aws_iam_policy.ecs.arn
+# }
 
 # data "aws_iam_policy_document" "service_linked_ecs" {
 #   statement {
@@ -402,10 +402,57 @@ resource "aws_iam_user_policy_attachment" "service_linked" {
 # Policy for ELB access #
 #########################
 
+# data "aws_iam_policy_document" "elb" {
+#   statement {
+#     effect = "Allow"
+#     actions = [
+#       "elasticloadbalancing:DeleteLoadBalancer",
+#       "elasticloadbalancing:DeleteTargetGroup",
+#       "elasticloadbalancing:DeleteListener",
+#       "elasticloadbalancing:DescribeListeners",
+#       "elasticloadbalancing:DescribeLoadBalancerAttributes",
+#       "elasticloadbalancing:DescribeTargetGroups",
+#       "elasticloadbalancing:DescribeTargetGroupAttributes",
+#       "elasticloadbalancing:DescribeLoadBalancers",
+#       "elasticloadbalancing:CreateListener",
+#       "elasticloadbalancing:SetSecurityGroups",
+#       "elasticloadbalancing:ModifyLoadBalancerAttributes",
+#       "elasticloadbalancing:CreateLoadBalancer",
+#       "elasticloadbalancing:ModifyTargetGroupAttributes",
+#       "elasticloadbalancing:CreateTargetGroup",
+#       "elasticloadbalancing:AddTags",
+#       "elasticloadbalancing:DescribeTags",
+#       "elasticloadbalancing:ModifyListener"
+#     ]
+#     resources = ["*"]
+#   }
+# }
+
+#########################################
+# Combine access Policy for ELB and ECS #
+#########################################
+
 data "aws_iam_policy_document" "elb" {
   statement {
     effect = "Allow"
+
     actions = [
+
+      # ECS permissions
+      "ecs:DescribeClusters",
+      "ecs:DeregisterTaskDefinition",
+      "ecs:DeleteCluster",
+      "ecs:DescribeServices",
+      "ecs:UpdateService",
+      "ecs:DeleteService",
+      "ecs:DescribeTaskDefinition",
+      "ecs:CreateService",
+      "ecs:RegisterTaskDefinition",
+      "ecs:CreateCluster",
+      "ecs:UpdateCluster",
+      "ecs:TagResource",
+
+      # ELB permissions
       "elasticloadbalancing:DeleteLoadBalancer",
       "elasticloadbalancing:DeleteTargetGroup",
       "elasticloadbalancing:DeleteListener",
@@ -424,6 +471,7 @@ data "aws_iam_policy_document" "elb" {
       "elasticloadbalancing:DescribeTags",
       "elasticloadbalancing:ModifyListener"
     ]
+
     resources = ["*"]
   }
 }
@@ -498,7 +546,6 @@ data "aws_iam_policy_document" "route53" {
   statement {
     effect = "Allow"
     actions = [
-      "route53:ListHostedZones",
       "route53:ListHostedZones",
       "route53:ChangeTagsForResource",
       "route53:GetHostedZone",
